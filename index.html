@@ -10,6 +10,15 @@
     <link rel="stylesheet" href="styles.css?v=2.0">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- EmailJS for form handling -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function () {
+            emailjs.init({
+                publicKey: "YOUR_PUBLIC_KEY", // Replace with your EmailJS public key
+            });
+        })();
+    </script>
 </head>
 
 <body>
@@ -275,16 +284,25 @@
                         </div>
                     </div>
                 </div>
-                <form class="contact-form" id="contact-form">
+                <form class="contact-form" id="contact-form" data-netlify="true" netlify-honeypot="bot-field"
+                    name="tikaz-orders">
+                    <input type="hidden" name="form-name" value="tikaz-orders" />
+                    <p class="hidden">
+                        <label>Don't fill this out if you're human: <input name="bot-field" /></label>
+                    </p>
                     <h3>🛒 Commande Express</h3>
                     <div class="form-group">
-                        <input type="text" id="name" name="name" placeholder="Votre Nom" required>
+                        <input type="text" id="name" name="customer_name" placeholder="Votre Nom" required>
                     </div>
                     <div class="form-group">
-                        <input type="tel" id="phone" name="phone" placeholder="Numéro de Téléphone" required>
+                        <input type="tel" id="phone" name="customer_phone" placeholder="Numéro de Téléphone" required>
                     </div>
                     <div class="form-group">
-                        <input type="text" id="address" name="address" placeholder="Adresse de Livraison" required>
+                        <input type="email" id="email" name="customer_email" placeholder="Email" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="address" name="delivery_address"
+                            placeholder="Adresse de Livraison Complète" required>
                     </div>
                     <div class="form-group">
                         <select id="restaurant" name="restaurant" required>
@@ -295,11 +313,32 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <textarea id="order" name="order"
-                            placeholder="Votre Commande (ex: 1 carry massalé, 1 rougail saucisse, 2 samosas...)"
+                        <textarea id="order" name="order_details"
+                            placeholder="Votre Commande Détaillée (ex: 1 carry massalé (15€), 1 rougail saucisse (12€), 2 samosas (6€)...)"
                             rows="4" required></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary">🚀 Commander Maintenant!</button>
+                    <div class="form-group">
+                        <select id="payment-method" name="payment_method" required>
+                            <option value="">Mode de Paiement</option>
+                            <option value="cash">💰 Espèces à la livraison</option>
+                            <option value="card">💳 Carte bancaire</option>
+                            <option value="mobile">📱 Paiement mobile</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="special-instructions" name="special_instructions"
+                            placeholder="Instructions spéciales (allergies, étage, code d'accès...)"
+                            rows="2"></textarea>
+                    </div>
+                    <div class="order-summary" id="order-summary" style="display:none;">
+                        <h4>� Récapitulatif de votre commande</h4>
+                        <div id="summary-content"></div>
+                        <div class="total-price">
+                            <strong>Total estimé: <span id="total-amount">0€</span></strong>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="submit-order">🚀 Confirmer la Commande</button>
+                    <div class="form-status" id="form-status"></div>
                 </form>
             </div>
         </div>
